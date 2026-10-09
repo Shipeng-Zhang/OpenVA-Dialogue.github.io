@@ -21,6 +21,8 @@
       </a>
       <nav class="nav-links" aria-label="Main navigation">
         <a class="active" href="#demos">Demos</a>
+        <a href="#benchmark">Benchmark</a>
+        <a href="#timeline">Timeline</a>
         <a href="#overview">Overview</a>
         <a href="#citation">Citation</a>
       </nav>
@@ -209,8 +211,45 @@
         <p class="grid-footnote"><span class="footnote-line"></span> More samples are available in the local research bundle.</p>
       </section>
 
+      <section class="benchmark-section shell" id="benchmark">
+        <div class="section-index">03 <span>/</span> BENCHMARK VIEW</div>
+        <div class="benchmark-head">
+          <div><h2>Same prompt.<br /><span>Different rhythm.</span></h2></div>
+          <div class="benchmark-copy"><p>A qualitative side-by-side view against Vidu, using the same reference and prompt. The comparison focuses on the details that matter in dialogue: temporal identity, response timing, and stable motion.</p><p class="body-muted">Add a Vidu export with the control below to turn this section into a ready-to-present comparison.</p></div>
+        </div>
+        <div class="compare-stage">
+          <article class="compare-panel compare-ours">
+            <div class="compare-media"><video src="feng_ge.mp4" muted loop playsinline preload="metadata"></video><div class="compare-overlay"></div><div class="compare-label"><span class="compare-index">A</span><span>RDG / OURS</span></div><button class="compare-play" aria-label="Play our comparison video"><span class="play-icon"></span></button></div>
+            <div class="compare-caption"><div><p class="card-eyebrow">REALTIME DIALOGUE GENERATION</p><h3>Shared conversational state</h3></div><span class="compare-status"><b></b> sample ready</span></div>
+          </article>
+          <div class="versus-mark"><span>VS</span><i></i></div>
+          <article class="compare-panel compare-vidu">
+            <div class="compare-placeholder" id="viduPlaceholder"><div class="placeholder-orbit"></div><div class="placeholder-copy"><span class="compare-index">B</span><strong>VIDU</strong><small>BASELINE SLOT</small><label class="upload-button" for="viduUpload">Load Vidu clip <span>↗</span></label><input id="viduUpload" type="file" accept="video/*" /></div></div>
+            <video class="vidu-video" id="viduVideo" muted loop playsinline controls hidden></video>
+            <div class="compare-caption"><div><p class="card-eyebrow">REFERENCE BASELINE</p><h3>Vidu comparison</h3></div><span class="compare-status status-muted"><b></b> awaiting clip</span></div>
+          </article>
+        </div>
+        <div class="comparison-axes" aria-label="Comparison axes">
+          <div><span class="axis-number">01</span><strong>Temporal identity</strong><small>face and voice stay coherent across time</small></div>
+          <div><span class="axis-number">02</span><strong>Motion stability</strong><small>less drift during response and pause</small></div>
+          <div><span class="axis-number">03</span><strong>Dialogue timing</strong><small>backchannel and interruption behavior</small></div>
+        </div>
+      </section>
+
+      <section class="timeline-section shell" id="timeline">
+        <div class="section-index">04 <span>/</span> TEMPORAL ANATOMY</div>
+        <div class="timeline-head"><div><h2>Read the video<br /><span>as a signal.</span></h2></div><p>One featured sample, unpacked frame by frame. Scrub through the sequence to inspect visual continuity while the waveform keeps the acoustic stream in view.</p></div>
+        <div class="timeline-lab">
+          <div class="timeline-stage"><canvas id="timelineCanvas" width="960" height="540"></canvas><div class="stage-corner stage-corner-tl">FEATURED SAMPLE / FENG GE</div><div class="stage-corner stage-corner-br" id="timelineTime">00:00.00</div><div class="stage-scanline"></div></div>
+          <video id="timelineVideo" class="timeline-source" src="feng_ge.mp4" playsinline preload="metadata"></video>
+          <div class="timeline-controls"><button id="timelinePlay" class="timeline-play" type="button" aria-label="Play featured sample"><span class="play-icon"></span></button><div class="timeline-track-wrap"><canvas id="waveformCanvas" width="900" height="76" aria-label="Audio waveform"></canvas><input id="timelineRange" class="timeline-range" type="range" min="0" max="1" step="0.01" value="0" aria-label="Scrub featured sample" /><div class="timeline-ticks"><span>00:00</span><span>00:25</span><span>00:50</span><span>01:15</span><span>01:40</span></div></div></div>
+          <div class="frame-strip" id="frameStrip" aria-label="Sample frame sequence"></div>
+        </div>
+        <div class="timeline-caption"><span class="timeline-caption-mark"></span><p><b>Visual continuity</b> follows the same latent state as the audio response. The strip above is rendered from the local video at evenly spaced moments.</p><span class="timeline-caption-note">FRAME ↔ AUDIO</span></div>
+      </section>
+
       <section class="method-section shell">
-        <div class="section-index">03 <span>/</span> SYSTEM VIEW</div>
+        <div class="section-index">05 <span>/</span> SYSTEM VIEW</div>
         <div class="method-head"><h2>One stream.<br /><span>Multiple signals.</span></h2><p>Every response is synthesized with the conversational state in view — from semantic intent to subtle acoustic and visual timing.</p></div>
         <div class="method-diagram" aria-label="System diagram showing input, shared state, and output">
           <div class="diagram-node node-input"><span class="node-number">01</span><strong>INPUT</strong><small>voice · text · context</small></div>
@@ -222,7 +261,7 @@
       </section>
 
       <section class="citation-section shell" id="citation">
-        <div class="section-index">04 <span>/</span> CITATION</div>
+        <div class="section-index">06 <span>/</span> CITATION</div>
         <div class="citation-grid">
           <div><h2>Build on<br /><span>the signal.</span></h2><p>If this demo is useful to your research, please cite our work.</p></div>
           <div class="citation-box"><div class="citation-top"><span>BIBTEX</span><button id="copyCitation" type="button">Copy citation <span>⧉</span></button></div><code id="citationText">@article{rdg2026,<br />&nbsp;&nbsp;title = {Realtime Dialogue Generation},<br />&nbsp;&nbsp;author = {Anonymous Authors},<br />&nbsp;&nbsp;journal = {arXiv preprint},<br />&nbsp;&nbsp;year = {2026}<br />}</code><span class="copy-confirm" id="copyConfirm">Copied to clipboard</span></div>
