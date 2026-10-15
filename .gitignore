@@ -1,5 +1,14 @@
-.seedvr2/
-__pycache__/
-video_v7.zip
-serve.py
+# Keep this repository limited to the static demo page and its active videos.
+*
 
+# Repository configuration
+!/.gitignore
+
+# Demo page
+!/index.html
+!/styles.css
+!/app.js
+
+# SeedVR2 demo videos used by index.html
+!/video20_seedvr2_1024/
+!/video20_seedvr2_1024/*.mp4
