@@ -1,7 +1,6 @@
 const cards = [...document.querySelectorAll('.demo-card')];
 const tabs = [...document.querySelectorAll('.filter-tab')];
 const visibleCount = document.querySelector('#visibleCount');
-const videos = [...document.querySelectorAll('.card-media video')];
 const modal = document.querySelector('#videoModal');
 const modalVideo = document.querySelector('#modalVideo');
 const modalTitle = document.querySelector('#modalTitle');
@@ -9,10 +8,30 @@ const modalEyebrow = document.querySelector('#modalEyebrow');
 const modalDescription = document.querySelector('#modalDescription');
 let activePreview = null;
 
-// Do not make the browser fetch all 20 MP4 files on initial page load.
-videos.forEach((video) => {
-  video.preload = 'none';
-});
+function getVideoSource(video) {
+  return video?.dataset.src || video?.getAttribute('src') || '';
+}
+
+function loadVideo(video, preload = 'metadata') {
+  if (!video || video.hasAttribute('src')) return video;
+  const source = getVideoSource(video);
+  if (!source) return video;
+  video.preload = preload;
+  video.src = source;
+  video.load();
+  return video;
+}
+
+function playWhenReady(video, shouldPlay = () => true, preload = 'auto') {
+  loadVideo(video, preload);
+  if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+    if (shouldPlay()) video.play().catch(() => {});
+    return;
+  }
+  video.addEventListener('canplay', () => {
+    if (shouldPlay()) video.play().catch(() => {});
+  }, { once: true });
+}
 
 function updateFilter(filter) {
   let count = 0;
@@ -36,7 +55,7 @@ tabs.forEach((tab) => {
 });
 
 function openModal(card) {
-  const source = card.querySelector('video').getAttribute('src');
+  const source = getVideoSource(card.querySelector('video'));
   if (activePreview) {
     activePreview.pause();
     activePreview = null;
@@ -84,10 +103,11 @@ cards.forEach((card) => {
     if (modal.classList.contains('open')) return;
     if (activePreview && activePreview !== video) activePreview.pause();
     activePreview = video;
-    video.play().catch(() => {});
+    playWhenReady(video, () => activePreview === video && !modal.classList.contains('open'), 'metadata');
   });
   card.querySelector('.card-media').addEventListener('mouseleave', () => {
     video.pause();
+    if (activePreview === video) activePreview = null;
   });
 });
 
@@ -110,6 +130,10 @@ const compareVideo = document.querySelector('.compare-ours video');
 const comparePlay = document.querySelector('.compare-play');
 if (compareVideo && comparePlay) {
   comparePlay.addEventListener('click', () => {
+    if (!compareVideo.hasAttribute('src')) {
+      playWhenReady(compareVideo);
+      return;
+    }
     if (compareVideo.paused) {
       compareVideo.play().catch(() => {});
     } else {
@@ -158,17 +182,19 @@ function formatTime(seconds) {
 }
 
 function drawCover(source, canvas) {
-  if (!source.videoWidth || !source.videoHeight) return;
+  const sourceWidth = source.videoWidth || source.naturalWidth || source.width;
+  const sourceHeight = source.videoHeight || source.naturalHeight || source.height;
+  if (!sourceWidth || !sourceHeight) return;
   const context = canvas.getContext('2d');
   const targetRatio = canvas.width / canvas.height;
-  const sourceRatio = source.videoWidth / source.videoHeight;
-  let sx = 0; let sy = 0; let sw = source.videoWidth; let sh = source.videoHeight;
+  const sourceRatio = sourceWidth / sourceHeight;
+  let sx = 0; let sy = 0; let sw = sourceWidth; let sh = sourceHeight;
   if (sourceRatio > targetRatio) {
-    sw = source.videoHeight * targetRatio;
-    sx = (source.videoWidth - sw) / 2;
+    sw = sourceHeight * targetRatio;
+    sx = (sourceWidth - sw) / 2;
   } else {
-    sh = source.videoWidth / targetRatio;
-    sy = (source.videoHeight - sh) / 2;
+    sh = sourceWidth / targetRatio;
+    sy = (sourceHeight - sh) / 2;
   }
   context.fillStyle = '#111315';
   context.fillRect(0, 0, canvas.width, canvas.height);
@@ -246,47 +272,40 @@ function drawFallbackWaveform() {
   }
 }
 
-async function renderWaveform() {
-  if (!waveformCanvas || !timelineVideo) return;
-  try {
-    const response = await fetch(timelineVideo.getAttribute('src'));
-    const audioBuffer = await response.arrayBuffer();
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const decoded = await audioContext.decodeAudioData(audioBuffer);
-    const channel = decoded.getChannelData(0);
-    const context = waveformCanvas.getContext('2d');
-    const bars = 180;
-    const samplesPerBar = Math.max(1, Math.floor(channel.length / bars));
-    context.clearRect(0, 0, waveformCanvas.width, waveformCanvas.height);
-    context.strokeStyle = '#c9ef43';
-    context.lineWidth = 2;
-    for (let index = 0; index < bars; index += 1) {
-      let peak = 0;
-      const start = index * samplesPerBar;
-      for (let sample = start; sample < Math.min(start + samplesPerBar, channel.length); sample += 1) peak = Math.max(peak, Math.abs(channel[sample]));
-      const height = Math.max(3, peak * waveformCanvas.height * .8);
-      const x = index / bars * waveformCanvas.width;
-      context.globalAlpha = .35 + peak * .7;
-      context.beginPath();
-      context.moveTo(x, waveformCanvas.height / 2 - height / 2);
-      context.lineTo(x, waveformCanvas.height / 2 + height / 2);
-      context.stroke();
-    }
-    context.globalAlpha = 1;
-    await audioContext.close();
-  } catch {
-    drawFallbackWaveform();
-  }
-}
-
 if (timelineVideo) {
+  let timelineInitialized = false;
+  const initializeTimeline = () => {
+    if (timelineInitialized) return;
+    timelineInitialized = true;
+    loadVideo(timelineVideo, 'metadata');
+  };
+
+  drawFallbackWaveform();
+  const posterSource = timelineVideo.dataset.poster || timelineVideo.getAttribute('poster');
+  if (posterSource) {
+    const posterImage = new Image();
+    posterImage.decoding = 'async';
+    posterImage.addEventListener('load', () => drawCover(posterImage, timelineCanvas), { once: true });
+    posterImage.src = posterSource;
+  }
+
+  const timelineSection = timelineVideo.closest('.timeline-section');
+  if ('IntersectionObserver' in window && timelineSection) {
+    const timelineObserver = new IntersectionObserver((entries, observer) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      initializeTimeline();
+      observer.disconnect();
+    }, { rootMargin: '400px 0px' });
+    timelineObserver.observe(timelineSection);
+  } else {
+    initializeTimeline();
+  }
+
   timelineVideo.addEventListener('loadedmetadata', () => {
     timelineRange.max = timelineVideo.duration;
     timelineRange.value = 0;
-    drawFallbackWaveform();
     drawCurrentFrame();
     renderFrameStrip();
-    renderWaveform();
   });
   timelineVideo.addEventListener('loadeddata', drawCurrentFrame);
   timelineVideo.addEventListener('seeked', drawCurrentFrame);
@@ -294,12 +313,17 @@ if (timelineVideo) {
   timelineVideo.addEventListener('play', () => { timelinePlay.dataset.playing = 'true'; });
   timelineVideo.addEventListener('pause', () => { timelinePlay.dataset.playing = 'false'; });
   timelineRange.addEventListener('input', () => {
+    initializeTimeline();
     timelineVideo.pause();
     timelineVideo.currentTime = Number(timelineRange.value);
     drawCurrentFrame();
   });
   timelinePlay.addEventListener('click', () => {
-    if (timelineVideo.paused) timelineVideo.play().catch(() => {});
-    else timelineVideo.pause();
+    initializeTimeline();
+    if (!timelineVideo.paused) {
+      timelineVideo.pause();
+      return;
+    }
+    playWhenReady(timelineVideo);
   });
 }
