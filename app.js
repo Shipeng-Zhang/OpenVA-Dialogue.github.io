@@ -66,7 +66,7 @@ function openVideoModal(source, title, label) {
 
 function openModal(card) {
   const video = card.querySelector('video');
-  const title = card.querySelector('h3')?.textContent || card.dataset.title;
+  const title = card.querySelector('h3').textContent;
   const label = card.querySelector('.card-tag')?.textContent || 'OPENVA-DIALOGUE DEMO';
   openVideoModal(getVideoSource(video), title, label);
 }
