@@ -22,7 +22,7 @@
       <nav class="nav-links" aria-label="Main navigation">
         <a class="active" href="#demos">Demos</a>
         <a href="#benchmark">Benchmark</a>
-        <a href="#timeline">Timeline</a>
+        <a href="#timeline">Signal Map</a>
         <a href="#overview">Overview</a>
         <a href="#citation">Citation</a>
       </nav>
@@ -219,15 +219,55 @@
       </section>
 
       <section class="timeline-section shell" id="timeline">
-        <div class="section-index">04 <span>/</span> TEMPORAL ANATOMY</div>
-        <div class="timeline-head"><div><h2>Read the video<br /><span>as a signal.</span></h2></div><p>One featured sample, unpacked frame by frame. Scrub through the sequence to inspect visual continuity while the waveform keeps the acoustic stream in view.</p></div>
-        <div class="timeline-lab">
-          <div class="timeline-stage"><canvas id="timelineCanvas" width="960" height="540"></canvas><div class="stage-corner stage-corner-tl">FEATURED SAMPLE / ALAN TURING</div><div class="stage-corner stage-corner-br" id="timelineTime">00:00.00</div><div class="stage-scanline"></div></div>
-          <video id="timelineVideo" class="timeline-source" data-src="video20_seedvr2_1024/alan_turing_seedvr2_1024.mp4" poster="video20_seedvr2_1024/posters/alan_turing_seedvr2_1024.jpg" playsinline preload="none"></video>
-          <div class="timeline-controls"><button id="timelinePlay" class="timeline-play" type="button" aria-label="Play featured sample"><span class="play-icon"></span></button><div class="timeline-track-wrap"><canvas id="waveformCanvas" width="900" height="76" aria-label="Audio waveform"></canvas><input id="timelineRange" class="timeline-range" type="range" min="0" max="1" step="0.01" value="0" aria-label="Scrub featured sample" /><div class="timeline-ticks"><span>00:00</span><span>00:25</span><span>00:50</span><span>01:15</span><span>01:40</span></div></div></div>
-          <div class="frame-strip" id="frameStrip" aria-label="Sample frame sequence"></div>
+        <div class="section-index">04 <span>/</span> DIALOGUE SIGNAL</div>
+        <div class="timeline-head"><div><h2>See how dialogue<br /><span>stays continuous.</span></h2></div><p>A conversation is more than alternating speech. This map shows how listening, shared context, and visual response remain active together — without replaying another demo.</p></div>
+
+        <div class="signal-story">
+          <div class="signal-board" aria-label="Diagram of a continuous dialogue moving through listening, transition, and response">
+            <div class="signal-board-head">
+              <div><span class="signal-kicker">INTERACTION TRACE / ONE EXCHANGE</span><strong>Three signals, one shared conversational state</strong></div>
+              <span class="signal-status"><i></i> CONTINUOUS</span>
+            </div>
+
+            <div class="signal-phases" aria-hidden="true">
+              <div class="signal-phase phase-listen"><span>01</span><strong>LISTEN</strong><small>capture intent</small></div>
+              <div class="signal-phase phase-bridge"><span>02</span><strong>BRIDGE</strong><small>hold context</small></div>
+              <div class="signal-phase phase-respond"><span>03</span><strong>RESPOND</strong><small>stay present</small></div>
+            </div>
+
+            <div class="signal-lanes">
+              <div class="signal-lane lane-input">
+                <div class="lane-label"><span>01</span><strong>VOICE INPUT</strong><small>user is speaking</small></div>
+                <div class="lane-plot voice-trace" aria-hidden="true">
+                  <i style="--h: 18%"></i><i style="--h: 42%"></i><i style="--h: 67%"></i><i style="--h: 36%"></i><i style="--h: 78%"></i><i style="--h: 54%"></i><i style="--h: 88%"></i><i style="--h: 46%"></i><i style="--h: 71%"></i><i style="--h: 31%"></i><i style="--h: 62%"></i><i style="--h: 84%"></i><i style="--h: 43%"></i><i style="--h: 24%"></i><i style="--h: 13%"></i><i style="--h: 8%"></i>
+                </div>
+                <span class="lane-note note-input">intent detected</span>
+              </div>
+
+              <div class="signal-lane lane-state">
+                <div class="lane-label"><span>02</span><strong>SHARED STATE</strong><small>meaning persists</small></div>
+                <div class="lane-plot state-trace" aria-hidden="true"><span></span><i></i><i></i><i></i><i></i><b>CONTEXT HELD</b></div>
+                <span class="lane-note note-state">no reset between turns</span>
+              </div>
+
+              <div class="signal-lane lane-response">
+                <div class="lane-label"><span>03</span><strong>VISUAL RESPONSE</strong><small>motion + speech</small></div>
+                <div class="lane-plot response-trace" aria-hidden="true"><span></span><i></i><i></i><i></i><b>RESPONSE READY</b></div>
+                <span class="lane-note note-response">expression leads the reply</span>
+              </div>
+            </div>
+
+            <div class="signal-axis" aria-hidden="true"><span>INPUT OPENS</span><span>INTENT FORMS</span><span>RESPONSE EMERGES</span><span>TURN CONTINUES</span></div>
+          </div>
+
+          <div class="signal-reading">
+            <div class="signal-reading-intro"><span>WHAT TO NOTICE</span><p>The important behavior happens between turns. Read the diagram from left to right to see how the system avoids a hard stop-and-start exchange.</p></div>
+            <article class="signal-insight"><span>01</span><div><h3>Listening stays open</h3><p>Input remains active while the model prepares a response, so interruptions and backchannels still belong to the same exchange.</p></div></article>
+            <article class="signal-insight"><span>02</span><div><h3>Context does not reset</h3><p>A shared state carries intent across the transition instead of treating every reply as an isolated generation task.</p></div></article>
+            <article class="signal-insight"><span>03</span><div><h3>Response begins naturally</h3><p>Expression and motion can emerge before the full verbal reply, creating a more immediate sense of presence.</p></div></article>
+          </div>
         </div>
-        <div class="timeline-caption"><span class="timeline-caption-mark"></span><p><b>Visual continuity</b> follows the same latent state as the audio response. The strip above is rendered from the local video at evenly spaced moments.</p><span class="timeline-caption-note">FRAME ↔ AUDIO</span></div>
+        <div class="signal-takeaway"><span class="timeline-caption-mark"></span><p><b>The key idea:</b> listening and responding overlap. The model carries one continuous state through the exchange instead of stitching together separate turns.</p><span>LISTEN ↔ RESPOND</span></div>
       </section>
 
       <section class="method-section shell">

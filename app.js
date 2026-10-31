@@ -11,7 +11,6 @@ let activePreview = null;
 function getVideoSource(video) {
   return video?.dataset.src || video?.getAttribute('src') || '';
 }
-
 function loadVideo(video, preload = 'metadata') {
   if (!video || video.hasAttribute('src')) return video;
   const source = getVideoSource(video);
@@ -141,7 +140,6 @@ if (compareVideo && comparePlay) {
     }
   });
 }
-
 const viduUpload = document.querySelector('#viduUpload');
 const viduPlaceholder = document.querySelector('#viduPlaceholder');
 const viduVideo = document.querySelector('#viduVideo');
@@ -160,170 +158,5 @@ if (viduUpload && viduVideo) {
       viduStatus.classList.remove('status-muted');
       viduStatus.innerHTML = '<b></b> local clip loaded';
     }
-  });
-}
-
-// --- Featured temporal anatomy viewer ------------------------------------
-const timelineVideo = document.querySelector('#timelineVideo');
-const timelineCanvas = document.querySelector('#timelineCanvas');
-const waveformCanvas = document.querySelector('#waveformCanvas');
-const timelineRange = document.querySelector('#timelineRange');
-const timelinePlay = document.querySelector('#timelinePlay');
-const timelineTime = document.querySelector('#timelineTime');
-const frameStrip = document.querySelector('#frameStrip');
-const frameCount = 7;
-let frameCells = [];
-
-function formatTime(seconds) {
-  if (!Number.isFinite(seconds)) return '00:00.00';
-  const minutes = Math.floor(seconds / 60).toString().padStart(2, '0');
-  const remaining = (seconds % 60).toFixed(2).padStart(5, '0');
-  return `${minutes}:${remaining}`;
-}
-
-function drawCover(source, canvas) {
-  const sourceWidth = source.videoWidth || source.naturalWidth || source.width;
-  const sourceHeight = source.videoHeight || source.naturalHeight || source.height;
-  if (!sourceWidth || !sourceHeight) return;
-  const context = canvas.getContext('2d');
-  const targetRatio = canvas.width / canvas.height;
-  const sourceRatio = sourceWidth / sourceHeight;
-  let sx = 0; let sy = 0; let sw = sourceWidth; let sh = sourceHeight;
-  if (sourceRatio > targetRatio) {
-    sw = sourceHeight * targetRatio;
-    sx = (sourceWidth - sw) / 2;
-  } else {
-    sh = sourceWidth / targetRatio;
-    sy = (sourceHeight - sh) / 2;
-  }
-  context.fillStyle = '#111315';
-  context.fillRect(0, 0, canvas.width, canvas.height);
-  context.drawImage(source, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
-}
-
-function seekTimeline(time) {
-  return new Promise((resolve) => {
-    if (!timelineVideo || Math.abs(timelineVideo.currentTime - time) < 0.01) {
-      resolve();
-      return;
-    }
-    const onSeeked = () => resolve();
-    timelineVideo.addEventListener('seeked', onSeeked, { once: true });
-    timelineVideo.currentTime = time;
-    window.setTimeout(resolve, 900);
-  });
-}
-
-function drawCurrentFrame() {
-  if (!timelineVideo || timelineVideo.readyState < 2) return;
-  drawCover(timelineVideo, timelineCanvas);
-  if (timelineTime) timelineTime.textContent = formatTime(timelineVideo.currentTime);
-  if (timelineRange) timelineRange.value = timelineVideo.currentTime;
-  frameCells.forEach((cell) => {
-    cell.button.classList.toggle('active', Math.abs(Number(cell.time) - timelineVideo.currentTime) < Math.max(.08, timelineVideo.duration / 35));
-  });
-}
-
-async function renderFrameStrip() {
-  if (!timelineVideo || !timelineVideo.duration || !frameStrip) return;
-  const previousTime = timelineVideo.currentTime;
-  frameStrip.innerHTML = '';
-  frameCells = [];
-  for (let index = 0; index < frameCount; index += 1) {
-    const time = timelineVideo.duration * index / (frameCount - 1);
-    const button = document.createElement('button');
-    button.className = 'frame-cell';
-    button.type = 'button';
-    button.setAttribute('aria-label', `Show frame at ${formatTime(time)}`);
-    const canvas = document.createElement('canvas');
-    canvas.width = 320;
-    canvas.height = 180;
-    const label = document.createElement('span');
-    label.textContent = formatTime(time);
-    button.append(canvas, label);
-    button.addEventListener('click', () => {
-      timelineVideo.pause();
-      timelineVideo.currentTime = time;
-      drawCurrentFrame();
-    });
-    frameStrip.appendChild(button);
-    frameCells.push({ button, time });
-    await seekTimeline(time);
-    drawCover(timelineVideo, canvas);
-  }
-  timelineVideo.currentTime = previousTime;
-  drawCurrentFrame();
-}
-
-function drawFallbackWaveform() {
-  if (!waveformCanvas) return;
-  const context = waveformCanvas.getContext('2d');
-  const bars = 150;
-  context.clearRect(0, 0, waveformCanvas.width, waveformCanvas.height);
-  context.strokeStyle = 'rgba(201,239,67,.78)';
-  context.lineWidth = 2;
-  for (let index = 0; index < bars; index += 1) {
-    const value = 5 + ((index * 37) % 29) + Math.abs(Math.sin(index * .37) * 17);
-    const x = index / bars * waveformCanvas.width;
-    context.beginPath();
-    context.moveTo(x, waveformCanvas.height / 2 - value);
-    context.lineTo(x, waveformCanvas.height / 2 + value);
-    context.stroke();
-  }
-}
-
-if (timelineVideo) {
-  let timelineInitialized = false;
-  const initializeTimeline = () => {
-    if (timelineInitialized) return;
-    timelineInitialized = true;
-    loadVideo(timelineVideo, 'metadata');
-  };
-
-  drawFallbackWaveform();
-  const posterSource = timelineVideo.dataset.poster || timelineVideo.getAttribute('poster');
-  if (posterSource) {
-    const posterImage = new Image();
-    posterImage.decoding = 'async';
-    posterImage.addEventListener('load', () => drawCover(posterImage, timelineCanvas), { once: true });
-    posterImage.src = posterSource;
-  }
-
-  const timelineSection = timelineVideo.closest('.timeline-section');
-  if ('IntersectionObserver' in window && timelineSection) {
-    const timelineObserver = new IntersectionObserver((entries, observer) => {
-      if (!entries.some((entry) => entry.isIntersecting)) return;
-      initializeTimeline();
-      observer.disconnect();
-    }, { rootMargin: '400px 0px' });
-    timelineObserver.observe(timelineSection);
-  } else {
-    initializeTimeline();
-  }
-
-  timelineVideo.addEventListener('loadedmetadata', () => {
-    timelineRange.max = timelineVideo.duration;
-    timelineRange.value = 0;
-    drawCurrentFrame();
-    renderFrameStrip();
-  });
-  timelineVideo.addEventListener('loadeddata', drawCurrentFrame);
-  timelineVideo.addEventListener('seeked', drawCurrentFrame);
-  timelineVideo.addEventListener('timeupdate', drawCurrentFrame);
-  timelineVideo.addEventListener('play', () => { timelinePlay.dataset.playing = 'true'; });
-  timelineVideo.addEventListener('pause', () => { timelinePlay.dataset.playing = 'false'; });
-  timelineRange.addEventListener('input', () => {
-    initializeTimeline();
-    timelineVideo.pause();
-    timelineVideo.currentTime = Number(timelineRange.value);
-    drawCurrentFrame();
-  });
-  timelinePlay.addEventListener('click', () => {
-    initializeTimeline();
-    if (!timelineVideo.paused) {
-      timelineVideo.pause();
-      return;
-    }
-    playWhenReady(timelineVideo);
   });
 }
