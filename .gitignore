@@ -14,6 +14,8 @@
 !/video20_seedvr2_1024/*.mp4
 !/video20_seedvr2_1024/posters/
 !/video20_seedvr2_1024/posters/*.jpg
+!/video20_seedvr2_1024/frames/
+!/video20_seedvr2_1024/frames/*.webp
 
 # Removed low-quality demos must stay out even if restored locally.
 /video20_seedvr2_1024/chinese_girl_2_seedvr2_1024.mp4

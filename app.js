@@ -1,11 +1,9 @@
 const cards = [...document.querySelectorAll('.demo-card')];
 const tabs = [...document.querySelectorAll('.filter-tab')];
-const visibleCount = document.querySelector('#visibleCount');
 const modal = document.querySelector('#videoModal');
 const modalVideo = document.querySelector('#modalVideo');
 const modalTitle = document.querySelector('#modalTitle');
 const modalEyebrow = document.querySelector('#modalEyebrow');
-const modalDescription = document.querySelector('#modalDescription');
 let activePreview = null;
 
 function getVideoSource(video) {
@@ -33,13 +31,10 @@ function playWhenReady(video, shouldPlay = () => true, preload = 'auto') {
 }
 
 function updateFilter(filter) {
-  let count = 0;
   cards.forEach((card) => {
     const visible = filter === 'all' || card.dataset.category === filter;
     card.classList.toggle('is-hidden', !visible);
-    if (visible) count += 1;
   });
-  visibleCount.textContent = String(count).padStart(2, '0');
 }
 
 tabs.forEach((tab) => {
@@ -53,21 +48,27 @@ tabs.forEach((tab) => {
   });
 });
 
-function openModal(card) {
-  const source = getVideoSource(card.querySelector('video'));
+function openVideoModal(source, title, label) {
+  if (!source) return;
   if (activePreview) {
     activePreview.pause();
     activePreview = null;
   }
   modalVideo.src = source;
   modalVideo.preload = 'auto';
-  modalTitle.textContent = card.dataset.title;
-  modalEyebrow.textContent = card.querySelector('.card-eyebrow').textContent;
-  modalDescription.textContent = card.querySelector('.card-description').textContent;
+  modalTitle.textContent = title;
+  modalEyebrow.textContent = label;
   modal.classList.add('open');
   modal.setAttribute('aria-hidden', 'false');
   document.body.classList.add('modal-open');
   modalVideo.play().catch(() => {});
+}
+
+function openModal(card) {
+  const video = card.querySelector('video');
+  const title = card.querySelector('h3')?.textContent || card.dataset.title;
+  const label = card.querySelector('.card-tag')?.textContent || 'OPENVA-DIALOGUE DEMO';
+  openVideoModal(getVideoSource(video), title, label);
 }
 
 function closeModal() {
@@ -125,18 +126,19 @@ copyButton.addEventListener('click', async () => {
 });
 
 // --- Side-by-side baseline comparison ------------------------------------
-const compareVideo = document.querySelector('.compare-ours video');
-const comparePlay = document.querySelector('.compare-play');
-if (compareVideo && comparePlay) {
-  comparePlay.addEventListener('click', () => {
-    if (!compareVideo.hasAttribute('src')) {
-      playWhenReady(compareVideo);
-      return;
-    }
-    if (compareVideo.paused) {
-      compareVideo.play().catch(() => {});
-    } else {
-      compareVideo.pause();
+const compareMedia = document.querySelector('.compare-ours .compare-media');
+const compareVideo = compareMedia?.querySelector('video');
+if (compareMedia && compareVideo) {
+  const openComparison = () => openVideoModal(
+    getVideoSource(compareVideo),
+    'OpenVA-Dialogue',
+    'QUALITATIVE COMPARISON / OURS',
+  );
+  compareMedia.addEventListener('click', openComparison);
+  compareMedia.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openComparison();
     }
   });
 }
@@ -153,10 +155,24 @@ if (viduUpload && viduVideo) {
     viduVideo.dataset.objectUrl = objectUrl;
     viduVideo.src = objectUrl;
     viduVideo.hidden = false;
+    viduVideo.tabIndex = 0;
+    viduVideo.setAttribute('role', 'button');
     viduPlaceholder.style.display = 'none';
     if (viduStatus) {
       viduStatus.classList.remove('status-muted');
-      viduStatus.innerHTML = '<b></b> local clip loaded';
+      viduStatus.textContent = 'VIEW LARGE ↗';
+    }
+  });
+
+  const openViduComparison = () => {
+    if (!viduVideo.src) return;
+    openVideoModal(viduVideo.src, 'Vidu S1', 'QUALITATIVE COMPARISON / BASELINE');
+  };
+  viduVideo.addEventListener('click', openViduComparison);
+  viduVideo.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openViduComparison();
     }
   });
 }

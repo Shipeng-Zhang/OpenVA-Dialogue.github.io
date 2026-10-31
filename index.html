@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0a0a0b" />
-    <meta name="description" content="Realtime Dialogue Generation — a research demo page for controllable, full-duplex conversational video generation." />
-    <title>OpenVA-dialogue</title>
+    <meta name="description" content="OpenVA-Dialogue — an open-source agent for full-duplex real-time audio-visual dialogue." />
+    <title>OpenVA-Dialogue</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -15,14 +15,14 @@
     <div class="site-noise" aria-hidden="true"></div>
 
     <header class="topbar">
-      <a class="brand" href="#top" aria-label="Realtime Dialogue Generation home">
+      <a class="brand" href="#top" aria-label="OpenVA-Dialogue home">
         <span class="brand-mark"><i></i><i></i><i></i></span>
-        <span class="brand-name">RDG<span class="brand-dot">·</span>Lab</span>
+        <span class="brand-name">OpenVA<span class="brand-dot">·</span>Dialogue</span>
       </a>
       <nav class="nav-links" aria-label="Main navigation">
         <a class="active" href="#demos">Demos</a>
         <a href="#benchmark">Benchmark</a>
-        <a href="#timeline">Signal Map</a>
+        <a href="#timeline">Frames</a>
         <a href="#overview">Overview</a>
         <a href="#citation">Citation</a>
       </nav>
@@ -32,17 +32,12 @@
     <main id="top">
       <section class="hero shell">
         <div class="hero-copy">
-          <p class="kicker"><span class="kicker-line"></span> RESEARCH DEMO / 2026</p>
-          <h1>Realtime dialogue,<br /><em>without the turn.</em></h1>
-          <p class="hero-lede">A unified framework for generating expressive, low-latency conversational video. Listen, respond, and stay present — simultaneously.</p>
+          <p class="kicker"><span class="kicker-line"></span> OPEN-SOURCE A2AV AGENT / 2026</p>
+          <h1>Full-duplex dialogue,<br /><em>in real time.</em></h1>
+          <p class="hero-lede">OpenVA-Dialogue coordinates streaming speech and avatar video in one continuous interaction on a single consumer GPU.</p>
           <div class="hero-actions">
             <a class="button button-primary" href="#demos">Explore demos <span>↓</span></a>
             <a class="button button-quiet" href="#overview">Read the overview <span>↗</span></a>
-          </div>
-          <div class="hero-meta">
-            <span><b class="status-dot"></b> Interactive preview</span>
-            <span class="meta-separator"></span>
-            <span>Local samples · no upload</span>
           </div>
         </div>
         <div class="hero-visual" aria-label="Abstract waveform visual">
@@ -53,30 +48,22 @@
             <div class="core-ring ring-back"></div>
             <div class="core-ring ring-front"></div>
             <div class="core-glow"></div>
-            <div class="core-label"><span>DUAL</span><span>STREAM</span></div>
+            <div class="core-label"><span>FULL</span><span>DUPLEX</span></div>
           </div>
-          <div class="visual-caption"><span>01</span><span>semantic ↔ acoustic</span></div>
+          <div class="visual-caption"><span>01</span><span>speech ↔ video</span></div>
           <div class="signal signal-a"></div>
           <div class="signal signal-b"></div>
         </div>
-      </section>
-
-      <section class="stats-band shell" aria-label="Project highlights">
-        <div class="stat"><span class="stat-value">16<span class="stat-unit">×</span></span><span class="stat-label">local samples</span></div>
-        <div class="stat"><span class="stat-value">04<span class="stat-unit">×</span></span><span class="stat-label">dialogue modes</span></div>
-        <div class="stat"><span class="stat-value">01<span class="stat-unit">×</span></span><span class="stat-label">shared interface</span></div>
-        <div class="stat stat-note"><span>Built for the moments<br />between the words.</span><span class="stat-arrow">↘</span></div>
       </section>
 
       <section class="intro-section shell" id="overview">
         <div class="section-index">01 <span>/</span> OVERVIEW</div>
         <div class="intro-grid">
           <div>
-            <h2>Conversation is a<br /><span>continuous signal.</span></h2>
+            <h2>Listen, speak,<br /><span>stay continuous.</span></h2>
           </div>
           <div class="intro-body">
-            <p>Realtime Dialogue Generation treats interaction as a living stream instead of a sequence of isolated turns. Our model jointly predicts visual presence, speech, and listening behavior — allowing natural interruptions, backchannels, and long-form context to emerge.</p>
-            <p class="body-muted">The examples below are generated from one shared model interface. Each sample highlights a different capability.</p>
+            <p>OpenVA-Dialogue jointly manages dialogue and audio-visual generation states. User interruptions update the response while avatar motion and the shared media timeline remain continuous.</p>
           </div>
         </div>
       </section>
@@ -85,20 +72,19 @@
         <div class="section-heading">
           <div>
             <div class="section-index">02 <span>/</span> DEMO LAB</div>
-            <h2>See it in dialogue.</h2>
+            <h2>Dialogue across identities.</h2>
           </div>
-          <p class="section-note">16 selected SeedVR2 samples<br />presented at 1024-class quality.</p>
+          <p class="section-note">16 generated avatar examples.</p>
         </div>
 
         <div class="demo-toolbar">
           <div class="filter-tabs" role="tablist" aria-label="Demo categories">
-            <button class="filter-tab active" data-filter="all" role="tab" aria-selected="true">All samples <span>16</span></button>
-            <button class="filter-tab" data-filter="duplex" role="tab" aria-selected="false">全双工 <span>03</span></button>
-            <button class="filter-tab" data-filter="long" role="tab" aria-selected="false">长对话 <span>04</span></button>
-            <button class="filter-tab" data-filter="persona" role="tab" aria-selected="false">多角色 <span>05</span></button>
-            <button class="filter-tab" data-filter="style" role="tab" aria-selected="false">风格迁移 <span>04</span></button>
+            <button class="filter-tab active" data-filter="all" role="tab" aria-selected="true">All <span>16</span></button>
+            <button class="filter-tab" data-filter="duplex" role="tab" aria-selected="false">Full duplex <span>03</span></button>
+            <button class="filter-tab" data-filter="long" role="tab" aria-selected="false">Long-form <span>04</span></button>
+            <button class="filter-tab" data-filter="persona" role="tab" aria-selected="false">Personas <span>05</span></button>
+            <button class="filter-tab" data-filter="style" role="tab" aria-selected="false">Visual styles <span>04</span></button>
           </div>
-          <div class="sample-count"><span id="visibleCount">16</span> samples visible</div>
         </div>
 
         <div class="demo-grid" id="demoGrid">
@@ -194,108 +180,71 @@
       </section>
 
       <section class="benchmark-section shell" id="benchmark">
-        <div class="section-index">03 <span>/</span> BENCHMARK VIEW</div>
+        <div class="section-index">03 <span>/</span> QUALITATIVE COMPARISON</div>
         <div class="benchmark-head">
-          <div><h2>Same prompt.<br /><span>Different rhythm.</span></h2></div>
-          <div class="benchmark-copy"><p>A qualitative side-by-side view against Vidu, using the same reference and prompt. The comparison focuses on the details that matter in dialogue: temporal identity, response timing, and stable motion.</p><p class="body-muted">Add a Vidu export with the control below to turn this section into a ready-to-present comparison.</p></div>
+          <div><h2>Same reference.<br /><span>Side by side.</span></h2></div>
+          <div class="benchmark-copy"><p>Compare OpenVA-Dialogue with Vidu S1 under the same reference conditions. Open either clip for a larger, controllable view.</p></div>
         </div>
         <div class="compare-stage">
           <article class="compare-panel compare-ours">
-            <div class="compare-media"><video data-src="video20_seedvr2_1024/alan_turing_seedvr2_1024.mp4" poster="video20_seedvr2_1024/posters/alan_turing_seedvr2_1024.jpg" muted loop playsinline preload="none"></video><div class="compare-overlay"></div><div class="compare-label"><span class="compare-index">A</span><span>RDG / OURS</span></div><button class="compare-play" aria-label="Play our comparison video"><span class="play-icon"></span></button></div>
-            <div class="compare-caption"><div><p class="card-eyebrow">REALTIME DIALOGUE GENERATION</p><h3>Shared conversational state</h3></div><span class="compare-status"><b></b> sample ready</span></div>
+            <div class="compare-media" role="button" tabindex="0" aria-label="Open OpenVA-Dialogue comparison video"><video data-src="video20_seedvr2_1024/alan_turing_seedvr2_1024.mp4" poster="video20_seedvr2_1024/posters/alan_turing_seedvr2_1024.jpg" muted loop playsinline preload="none"></video><div class="compare-overlay"></div><div class="compare-label"><span class="compare-index">A / OURS</span><span>VIEW LARGE ↗</span></div><span class="compare-play" aria-hidden="true"><span class="play-icon"></span></span></div>
+            <div class="compare-caption"><h3>OpenVA-Dialogue</h3><span class="compare-status">FULL-DUPLEX A2AV</span></div>
           </article>
           <div class="versus-mark"><span>VS</span><i></i></div>
           <article class="compare-panel compare-vidu">
-            <div class="compare-placeholder" id="viduPlaceholder"><div class="placeholder-orbit"></div><div class="placeholder-copy"><span class="compare-index">B</span><strong>VIDU</strong><small>BASELINE SLOT</small><label class="upload-button" for="viduUpload">Load Vidu clip <span>↗</span></label><input id="viduUpload" type="file" accept="video/*" /></div></div>
-            <video class="vidu-video" id="viduVideo" muted loop playsinline controls hidden></video>
-            <div class="compare-caption"><div><p class="card-eyebrow">REFERENCE BASELINE</p><h3>Vidu comparison</h3></div><span class="compare-status status-muted"><b></b> awaiting clip</span></div>
+            <div class="compare-placeholder" id="viduPlaceholder"><div class="placeholder-orbit"></div><div class="placeholder-copy"><span class="compare-index">B / BASELINE</span><strong>Vidu S1</strong><label class="upload-button" for="viduUpload">Load local clip <span>↗</span></label><input id="viduUpload" type="file" accept="video/*" /></div></div>
+            <video class="vidu-video" id="viduVideo" muted loop playsinline hidden aria-label="Open Vidu S1 comparison video"></video>
+            <div class="compare-caption"><h3>Vidu S1</h3><span class="compare-status status-muted">AWAITING CLIP</span></div>
           </article>
         </div>
         <div class="comparison-axes" aria-label="Comparison axes">
-          <div><span class="axis-number">01</span><strong>Temporal identity</strong><small>face and voice stay coherent across time</small></div>
-          <div><span class="axis-number">02</span><strong>Motion stability</strong><small>less drift during response and pause</small></div>
-          <div><span class="axis-number">03</span><strong>Dialogue timing</strong><small>backchannel and interruption behavior</small></div>
+          <div><span class="axis-number">01</span><strong>Generation quality</strong></div>
+          <div><span class="axis-number">02</span><strong>Listening behavior</strong></div>
+          <div><span class="axis-number">03</span><strong>Identity consistency</strong></div>
         </div>
       </section>
 
       <section class="timeline-section shell" id="timeline">
-        <div class="section-index">04 <span>/</span> DIALOGUE SIGNAL</div>
-        <div class="timeline-head"><div><h2>See how dialogue<br /><span>stays continuous.</span></h2></div><p>A conversation is more than alternating speech. This map shows how listening, shared context, and visual response remain active together — without replaying another demo.</p></div>
+        <div class="section-index">04 <span>/</span> FRAME STUDY</div>
+        <div class="timeline-head"><div><h2>Read the video<br /><span>as a signal.</span></h2></div><p>Four frames from the Alan Turing sample show one continuous motion trajectory across the dialogue.</p></div>
 
-        <div class="signal-story">
-          <div class="signal-board" aria-label="Diagram of a continuous dialogue moving through listening, transition, and response">
-            <div class="signal-board-head">
-              <div><span class="signal-kicker">INTERACTION TRACE / ONE EXCHANGE</span><strong>Three signals, one shared conversational state</strong></div>
-              <span class="signal-status"><i></i> CONTINUOUS</span>
-            </div>
-
-            <div class="signal-phases" aria-hidden="true">
-              <div class="signal-phase phase-listen"><span>01</span><strong>LISTEN</strong><small>capture intent</small></div>
-              <div class="signal-phase phase-bridge"><span>02</span><strong>BRIDGE</strong><small>hold context</small></div>
-              <div class="signal-phase phase-respond"><span>03</span><strong>RESPOND</strong><small>stay present</small></div>
-            </div>
-
-            <div class="signal-lanes">
-              <div class="signal-lane lane-input">
-                <div class="lane-label"><span>01</span><strong>VOICE INPUT</strong><small>user is speaking</small></div>
-                <div class="lane-plot voice-trace" aria-hidden="true">
-                  <i style="--h: 18%"></i><i style="--h: 42%"></i><i style="--h: 67%"></i><i style="--h: 36%"></i><i style="--h: 78%"></i><i style="--h: 54%"></i><i style="--h: 88%"></i><i style="--h: 46%"></i><i style="--h: 71%"></i><i style="--h: 31%"></i><i style="--h: 62%"></i><i style="--h: 84%"></i><i style="--h: 43%"></i><i style="--h: 24%"></i><i style="--h: 13%"></i><i style="--h: 8%"></i>
-                </div>
-                <span class="lane-note note-input">intent detected</span>
-              </div>
-
-              <div class="signal-lane lane-state">
-                <div class="lane-label"><span>02</span><strong>SHARED STATE</strong><small>meaning persists</small></div>
-                <div class="lane-plot state-trace" aria-hidden="true"><span></span><i></i><i></i><i></i><i></i><b>CONTEXT HELD</b></div>
-                <span class="lane-note note-state">no reset between turns</span>
-              </div>
-
-              <div class="signal-lane lane-response">
-                <div class="lane-label"><span>03</span><strong>VISUAL RESPONSE</strong><small>motion + speech</small></div>
-                <div class="lane-plot response-trace" aria-hidden="true"><span></span><i></i><i></i><i></i><b>RESPONSE READY</b></div>
-                <span class="lane-note note-response">expression leads the reply</span>
-              </div>
-            </div>
-
-            <div class="signal-axis" aria-hidden="true"><span>INPUT OPENS</span><span>INTENT FORMS</span><span>RESPONSE EMERGES</span><span>TURN CONTINUES</span></div>
+        <figure class="frame-study">
+          <div class="frame-strip">
+            <div class="frame-shot"><img src="video20_seedvr2_1024/frames/alan_01.webp" alt="Alan Turing avatar frame at 0.5 seconds" loading="lazy" /><span>00:00.5</span></div>
+            <div class="frame-shot"><img src="video20_seedvr2_1024/frames/alan_02.webp" alt="Alan Turing avatar frame at 14 seconds" loading="lazy" /><span>00:14</span></div>
+            <div class="frame-shot"><img src="video20_seedvr2_1024/frames/alan_03.webp" alt="Alan Turing avatar frame at 42 seconds" loading="lazy" /><span>00:42</span></div>
+            <div class="frame-shot"><img src="video20_seedvr2_1024/frames/alan_04.webp" alt="Alan Turing avatar frame at 49 seconds" loading="lazy" /><span>00:49</span></div>
           </div>
-
-          <div class="signal-reading">
-            <div class="signal-reading-intro"><span>WHAT TO NOTICE</span><p>The important behavior happens between turns. Read the diagram from left to right to see how the system avoids a hard stop-and-start exchange.</p></div>
-            <article class="signal-insight"><span>01</span><div><h3>Listening stays open</h3><p>Input remains active while the model prepares a response, so interruptions and backchannels still belong to the same exchange.</p></div></article>
-            <article class="signal-insight"><span>02</span><div><h3>Context does not reset</h3><p>A shared state carries intent across the transition instead of treating every reply as an isolated generation task.</p></div></article>
-            <article class="signal-insight"><span>03</span><div><h3>Response begins naturally</h3><p>Expression and motion can emerge before the full verbal reply, creating a more immediate sense of presence.</p></div></article>
-          </div>
-        </div>
-        <div class="signal-takeaway"><span class="timeline-caption-mark"></span><p><b>The key idea:</b> listening and responding overlap. The model carries one continuous state through the exchange instead of stitching together separate turns.</p><span>LISTEN ↔ RESPOND</span></div>
+          <figcaption><strong>Alan Turing</strong><span>Recurrent motion preserves visual continuity while the dialogue state changes.</span></figcaption>
+        </figure>
       </section>
 
       <section class="method-section shell">
         <div class="section-index">05 <span>/</span> SYSTEM VIEW</div>
-        <div class="method-head"><h2>One stream.<br /><span>Multiple signals.</span></h2><p>Every response is synthesized with the conversational state in view — from semantic intent to subtle acoustic and visual timing.</p></div>
+        <div class="method-head"><h2>State-coordinated<br /><span>full duplex.</span></h2><p>Speaking, listening, and turn transitions share one recurrent process. Interruptions change the response without resetting avatar motion or the media timeline.</p></div>
         <div class="method-diagram" aria-label="System diagram showing input, shared state, and output">
-          <div class="diagram-node node-input"><span class="node-number">01</span><strong>INPUT</strong><small>voice · text · context</small></div>
+          <div class="diagram-node node-input"><span class="node-number">01</span><strong>USER SPEECH</strong><small>STREAMING INPUT</small></div>
           <div class="diagram-connector connector-left"><i></i><i></i><i></i><i></i></div>
-          <div class="diagram-node node-state"><span class="state-pulse"></span><span class="node-number">02</span><strong>SHARED STATE</strong><small>semantic ↔ acoustic ↔ visual</small></div>
+          <div class="diagram-node node-state"><span class="state-pulse"></span><span class="node-number">02</span><strong>RECURRENT STATE</strong><small>SPEAKING · LISTENING</small></div>
           <div class="diagram-connector connector-right"><i></i><i></i><i></i><i></i></div>
-          <div class="diagram-node node-output"><span class="node-number">03</span><strong>RESPONSE</strong><small>speech · expression · timing</small></div>
+          <div class="diagram-node node-output"><span class="node-number">03</span><strong>A/V OUTPUT</strong><small>SPEECH · VIDEO</small></div>
         </div>
       </section>
 
       <section class="citation-section shell" id="citation">
         <div class="section-index">06 <span>/</span> CITATION</div>
         <div class="citation-grid">
-          <div><h2>Build on<br /><span>the signal.</span></h2><p>If this demo is useful to your research, please cite our work.</p></div>
-          <div class="citation-box"><div class="citation-top"><span>BIBTEX</span><button id="copyCitation" type="button">Copy citation <span>⧉</span></button></div><code id="citationText">@article{rdg2026,<br />&nbsp;&nbsp;title = {Realtime Dialogue Generation},<br />&nbsp;&nbsp;author = {Anonymous Authors},<br />&nbsp;&nbsp;journal = {arXiv preprint},<br />&nbsp;&nbsp;year = {2026}<br />}</code><span class="copy-confirm" id="copyConfirm">Copied to clipboard</span></div>
+          <div><h2>Cite<br /><span>OpenVA-Dialogue.</span></h2><p>Bibliographic details will be updated with the public release.</p></div>
+          <div class="citation-box"><div class="citation-top"><span>BIBTEX</span><button id="copyCitation" type="button">Copy citation <span>⧉</span></button></div><code id="citationText">@article{openva_dialogue2026,<br />&nbsp;&nbsp;title = {OpenVA-Dialogue: Open Source Intelligent Agents for Full-Duplex Real-Time Video and Audio Dialogue},<br />&nbsp;&nbsp;author = {Anonymous Authors},<br />&nbsp;&nbsp;year = {2026}<br />}</code><span class="copy-confirm" id="copyConfirm">Copied to clipboard</span></div>
         </div>
       </section>
     </main>
 
-    <footer class="footer shell"><span>RDG·LAB / REALTIME DIALOGUE GENERATION</span><span>Research preview · 2026</span><a href="#top">Back to top ↑</a></footer>
+    <footer class="footer shell"><span>OPENVA-DIALOGUE / FULL-DUPLEX A2AV</span><span>Research preview · 2026</span><a href="#top">Back to top ↑</a></footer>
 
     <div class="video-modal" id="videoModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Video preview">
       <div class="modal-backdrop" data-close-modal></div>
-      <div class="modal-panel"><button class="modal-close" data-close-modal aria-label="Close video">×</button><video id="modalVideo" controls playsinline></video><div class="modal-meta"><p class="card-eyebrow" id="modalEyebrow"></p><h3 id="modalTitle"></h3><p id="modalDescription"></p></div></div>
+      <div class="modal-panel"><button class="modal-close" data-close-modal aria-label="Close video">×</button><video id="modalVideo" controls playsinline></video><div class="modal-meta"><p class="modal-label" id="modalEyebrow"></p><h3 id="modalTitle"></h3></div></div>
     </div>
 
     <script src="app.js"></script>
